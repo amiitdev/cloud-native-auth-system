@@ -1,0 +1,63 @@
+# this code is for development purposes only, it is not intended for production use. It is not secure and should not be used in a production environment. It is only intended for use in a development environment where security is not a concern.
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+
+# metadata:
+#   name: app-ingress
+
+# spec:
+#   rules:
+#     - host: myapp.local
+
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: frontend-service
+#                 port:
+#                   number: 80
+
+#           - path: /api
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: backend-service
+#                 port:
+#                   number: 3000
+
+# For production use, you should use a secure ingress controller and configure it properly. You should also use a secure TLS certificate for your ingress. You should also consider using a more secure authentication method for your ingress, such as OAuth2 or JWT.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+
+  tls:
+    - hosts:
+        - myapp.com
+      secretName: myapp-tls
+
+  rules:
+    - host: myapp.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80
+
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 3000

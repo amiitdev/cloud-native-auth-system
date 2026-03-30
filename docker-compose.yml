@@ -1,0 +1,30 @@
+services:
+  backend:
+    build: ./backend
+    container_name: auth-backend
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./backend/.env.docker
+    restart: always
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    container_name: auth-frontend
+    ports:
+      - '3001:80'
+    restart: always
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+volumes:
+  mongo-data:
